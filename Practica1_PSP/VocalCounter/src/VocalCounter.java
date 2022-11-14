@@ -45,13 +45,13 @@ public class VocalCounter {
 			}
 		}
 		// Una vez terminado el analisis del archivo escribimos en el fichero de resultado el contador
-		pw.write(cont);
+		pw.write(cont + " ");
 		pw.flush();
 		pw.close();
 		
 		// Comprobamos que el resultado se ha escrito en el fichero del resultado
 		br = FilePropierties.getBufferedReader(fileResultName);
-		if(br.readLine() != null) {
+		if(br.readLine() == String.valueOf(cont)) {
 			volcado = true;
 		}
 		return volcado;

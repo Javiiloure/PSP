@@ -21,17 +21,23 @@ public class Principal {
 	                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 			switch (select) {
 			case 0:
-				nuevoAnalisis(vocal_counter);
+				try {
+					nuevoAnalisis(vocal_counter);
+				} catch(IOException e) {
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				} catch(InterruptedException e) {
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 				break;
 			case 1:
 				try { 
 					mostrarResultados();
 				} catch(FileNotFoundException e) {
-					JOptionPane.showMessageDialog(null, e.getMessage());
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				} catch(IOException e) {
-					JOptionPane.showMessageDialog(null, e.getMessage());
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
-					break;
+				break;
 			case 2:
 				exit = true;
 				break;
@@ -40,7 +46,7 @@ public class Principal {
 		JOptionPane.showMessageDialog(null, "Cerrando el programa");
 	}
 	
-	public static void nuevoAnalisis(String vocal_counter) {
+	public static void nuevoAnalisis(String vocal_counter) throws IOException, InterruptedException {
 		
 		// Seleccionamos con JFileChooser el archivo a ser analizado y guardamos la ruta en una cadena
 		String file;
@@ -49,24 +55,29 @@ public class Principal {
 		file = filechooser.getSelectedFile().getAbsolutePath();
 		
 		// Lanzamos un proceso por cada vocal a contar llamando a VocalCounter
-		try {
 			ProcessBuilder pb = new ProcessBuilder("java", vocal_counter, file, "a", "resultado_a.txt");
-			pb.start();
-
+			Process p1 = pb.start();
+			p1.waitFor();
+			
 			pb = new ProcessBuilder("java", vocal_counter, file, "e", "resultado_e.txt");
-			pb.start();
-
+			Process p2 = pb.start();
+			p2.waitFor();
+			
 			pb = new ProcessBuilder("java", vocal_counter, file, "i", "resultado_i.txt");
-			pb.start();
-	
+			Process p3 = pb.start();
+			p3.waitFor();
+			
 			pb = new ProcessBuilder("java", vocal_counter, file, "o", "resultado_o.txt");
-			pb.start();
-		
+			Process p4 = pb.start();
+			p4.waitFor();
+			
 			pb = new ProcessBuilder("java", vocal_counter, file, "u", "resultado_u.txt");
-			pb.start();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		}
+			Process p5 = pb.start();
+			p5.waitFor();
+		
+			// Bucle infinito que cerramos al terminar todosa los procesos para evitar que el programa siga funcionando
+			// mientras no se termina de contar
+		
 	}
 	
 	public static void mostrarResultados() throws FileNotFoundException, IOException {
@@ -109,7 +120,7 @@ public class Principal {
 			System.out.println(total_u);
 			fr.close();
 		} else {
-			JOptionPane.showMessageDialog(null, "Fichero o ficheros de recuento inexistentes.");
+			JOptionPane.showMessageDialog(null, "Fichero o ficheros de recuento inexistentes.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
