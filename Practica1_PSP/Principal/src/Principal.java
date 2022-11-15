@@ -13,11 +13,18 @@ public class Principal {
 	public static void main(String[] args) {
 		boolean exit = false;
 		int select;
-		String vocal_counter = args[0].toString();
+		String vocal_counter = "";
+		try {
+			vocal_counter = args[0].toString();
+		} catch (ArrayIndexOutOfBoundsException e) {
+			JOptionPane.showMessageDialog(null, "Debe introducir la ruta de VocalCounter como argumento", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
 		String[] options = { "Iniciar un nuevo analisis", "Mostrar ultimos resultados", "Salir del programa" };
 
 		// Condicional para saber si se ha introducido correctamente VocalCounter
-		if ((vocal_counter.endsWith("VocalCounter")) || vocal_counter.endsWith("VocalCounter.java")) {
+		if (vocal_counter.endsWith("VocalCounter") || vocal_counter.endsWith("VocalCounter.java")) {
 			// Bucle while para inicar el menu principal
 			inicio: while (exit != true) {
 				select = JOptionPane.showOptionDialog(null, "Bienvenido a contador de vocales, seleccione una opcion.",
@@ -37,7 +44,7 @@ public class Principal {
 								JOptionPane.ERROR_MESSAGE);
 						continue inicio;
 					} catch (InterruptedException e) {
-						JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "El contador ha sido interrumpido", "Error", JOptionPane.ERROR_MESSAGE);
 						continue inicio;
 					} catch (NullPointerException e) {
 						JOptionPane.showMessageDialog(null, "No se ha introducido ningun archivo", "Error",
@@ -176,15 +183,14 @@ public class Principal {
 		File file = new File("recuento_total.txt");
 		FileReader fr = new FileReader(file);
 		BufferedReader br = new BufferedReader(fr);
-
+		
 		// Bucle while que cerramos al terminar de leer el archivo
 		while ((linea = br.readLine()) != null) {
 			contenido += linea + "\n";
 		}
 		br.close();
-
+		
 		// Mostramos el contenido del archivo con JOptionPane
 		JOptionPane.showMessageDialog(null, contenido, "Recuento total", JOptionPane.INFORMATION_MESSAGE);
-
 	}
 }
